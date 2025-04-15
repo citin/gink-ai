@@ -1,0 +1,21 @@
+meta {
+  name: signup
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{HOST}}/signup
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "user": {
+      "email": "user@example.com",
+      "password": "password123",
+      "password_confirmation": "password123"
+    }
+  }
+}

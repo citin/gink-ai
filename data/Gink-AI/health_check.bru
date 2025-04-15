@@ -1,0 +1,11 @@
+meta {
+  name: health_check
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{HOST}}/up
+  body: none
+  auth: inherit
+}

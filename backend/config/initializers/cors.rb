@@ -7,10 +7,10 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'localhost:5173', '127.0.0.1:5173'  # Default Vite dev server ports
+    origins 'localhost:5173', '127.0.0.1:5173' # Default Vite dev server ports
 
-    resource "*",
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+    resource '*',
+             headers: :any,
+             methods: %i[get post put patch delete options head]
   end
 end
