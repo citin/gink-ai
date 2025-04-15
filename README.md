@@ -6,7 +6,7 @@ You can:
 - Fav your best threads
 - Hide messages from threads
 - Share threads to other users
-- Invite users to participate in your thread
+- Multi-user chat
 - Select between OpenAI, DeepSeek, Gemini and others
 - Change AI models in the middle of a thread
 
@@ -14,7 +14,7 @@ You can:
 
 <img width="1440" alt="image" src="https://github.com/user-attachments/assets/1ede5af8-74be-4cfb-abfb-5c0a823b7624" />
 
-## Stack 🧰
+## 🧰 Stack
 - 🖼️ React 19
 - ♦️ Rails 8 - API
 - 🖌️ DaisyUI
