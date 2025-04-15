@@ -1,0 +1,65 @@
+## Frontend (React) ##
+
+# Logs
+frontend/logs
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# Frontend dependencies and build files
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+
+## Backend (Rails) ##
+
+# Ignore bundler config
+backend/.bundle
+
+# Ignore all logfiles and tempfiles
+backend/log/*
+backend/tmp/*
+!backend/log/.keep
+!backend/tmp/.keep
+
+# Ignore pidfiles
+backend/tmp/pids/*
+!backend/tmp/pids/
+!backend/tmp/pids/.keep
+
+# Ignore uploaded files in development
+backend/storage/*
+!backend/storage/.keep
+backend/tmp/storage/*
+!backend/tmp/storage/
+!backend/tmp/storage/.keep
+
+# Ignore master key for decrypting credentials
+backend/config/master.key
+backend/config/credentials/*.key
+
+## .gitignore ##
+
+# Ignore main dependencies
+/node_modules
+/.bundle
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignore environment files
+.env
+.env.*
+!.env.example 
