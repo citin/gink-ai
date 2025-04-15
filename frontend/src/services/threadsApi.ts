@@ -37,6 +37,32 @@ export const fetchThreadById = async (threadId: string): Promise<Thread | null> 
 }
 
 /**
+ * Toggle a thread's favorite status
+ */
+export const toggleThreadFavorite = async (threadId: string, isFavourite: boolean): Promise<Thread> => {
+	// Simulate network delay
+	await new Promise(resolve => setTimeout(resolve, 300))
+
+	// This is where you would replace with a real API call in the future:
+	// const response = await fetch(`/api/threads/${threadId}/favorite`, {
+	//   method: 'PUT',
+	//   headers: { 'Content-Type': 'application/json' },
+	//   body: JSON.stringify({ isFavourite })
+	// })
+	// return response.json()
+
+	// For now, just return a mock successful response
+	return {
+		id: threadId,
+		isFavourite,
+		title: '',  // These fields aren't used for the response
+		createdAt: '',
+		updatedAt: '',
+		messages: []
+	}
+}
+
+/**
  * Additional API methods can be added here, following the same pattern:
  * - createThread
  * - updateThread

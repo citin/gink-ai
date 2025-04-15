@@ -1,0 +1,68 @@
+/* Custom animations for the UI */
+
+@keyframes ping-once {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5) rotate(15deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-ping-once {
+  animation: ping-once 0.3s ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* ThreadSidebarItem animations */
+.thread-item {
+  transition: all 0.3s ease;
+}
+
+/* Thread transition animation between sections */
+.thread-item.entering-favorites {
+  animation: slide-in-right 0.3s ease forwards;
+}
+
+.thread-item.leaving-favorites {
+  animation: slide-out-left 0.3s ease forwards;
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+} 

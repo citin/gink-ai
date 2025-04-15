@@ -1,15 +1,31 @@
 import { Thread as ThreadType } from '../types/thread';
 import ThreadSidebarItem from './ThreadSidebarItem';
+import { UseMutateFunction } from '@tanstack/react-query';
+import { useRef, useEffect } from 'react';
 
 interface SidebarProps {
 	threads: ThreadType[];
 	currentThread: ThreadType | null;
 	setCurrentThread: (thread: ThreadType) => void;
+	toggleFavorite: UseMutateFunction<ThreadType, Error, { threadId: string; isFavourite: boolean }, unknown>;
 }
 
-function Sidebar({ threads, currentThread, setCurrentThread }: SidebarProps) {
+function Sidebar({ threads, currentThread, setCurrentThread, toggleFavorite }: SidebarProps) {
+	// Derive favorite and non-favorite threads
 	const favoriteThreads = threads.filter(thread => thread.isFavourite);
 	const nonFavoriteThreads = threads.filter(thread => !thread.isFavourite);
+
+	// Refs to track which threads have changed
+	const prevThreadsRef = useRef<ThreadType[]>([]);
+
+	// Keep track of which threads have changed
+	useEffect(() => {
+		prevThreadsRef.current = threads;
+	}, [threads]);
+
+	const handleToggleFavorite = (threadId: string, isFavourite: boolean) => {
+		toggleFavorite({ threadId, isFavourite });
+	};
 
 	return (
 		<div className="drawer-side">
@@ -24,14 +40,21 @@ function Sidebar({ threads, currentThread, setCurrentThread }: SidebarProps) {
 					<h2 className="menu-title text-xs font-semibold uppercase text-opacity-60">Favorites</h2>
 					<ul className="menu menu-sm gap-1 w-full">
 						{favoriteThreads.map((thread) => (
-							<ThreadSidebarItem
+							<div
 								key={thread.id}
-								thread={thread}
-								currentThread={currentThread}
-								setCurrentThread={setCurrentThread}
-								isFavorite={true}
-							/>
+								className="thread-item animate-fade-in transition-all duration-300"
+							>
+								<ThreadSidebarItem
+									thread={thread}
+									currentThread={currentThread}
+									setCurrentThread={setCurrentThread}
+									onToggleFavorite={handleToggleFavorite}
+								/>
+							</div>
 						))}
+						{favoriteThreads.length === 0 && (
+							<li className="px-4 py-2 text-sm text-opacity-70">No favorite threads</li>
+						)}
 					</ul>
 				</div>
 
@@ -40,12 +63,17 @@ function Sidebar({ threads, currentThread, setCurrentThread }: SidebarProps) {
 					<h2 className="menu-title text-xs font-semibold uppercase text-opacity-60">All Threads</h2>
 					<ul className="menu menu-sm gap-1 w-full">
 						{nonFavoriteThreads.map((thread) => (
-							<ThreadSidebarItem
+							<div
 								key={thread.id}
-								thread={thread}
-								currentThread={currentThread}
-								setCurrentThread={setCurrentThread}
-							/>
+								className="thread-item animate-fade-in transition-all duration-300"
+							>
+								<ThreadSidebarItem
+									thread={thread}
+									currentThread={currentThread}
+									setCurrentThread={setCurrentThread}
+									onToggleFavorite={handleToggleFavorite}
+								/>
+							</div>
 						))}
 					</ul>
 				</div>

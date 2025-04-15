@@ -1,4 +1,5 @@
 import './App.css'
+import './animations.css'
 // Components
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
@@ -8,7 +9,7 @@ import Thread from './components/Thread'
 import useThreadsQuery from './hooks/useThreadsQuery'
 
 function App() {
-  const { threads, isLoading, currentThread, setCurrentThread } = useThreadsQuery()
+  const { threads, isLoading, currentThread, setCurrentThread, toggleFavorite } = useThreadsQuery()
 
   return (
     <div className="drawer lg:drawer-open" data-theme="cupcake">
@@ -24,7 +25,12 @@ function App() {
           )}
         </div>
       </div>
-      <Sidebar threads={threads} currentThread={currentThread} setCurrentThread={setCurrentThread} />
+      <Sidebar
+        threads={threads}
+        currentThread={currentThread}
+        setCurrentThread={setCurrentThread}
+        toggleFavorite={toggleFavorite}
+      />
     </div>
   )
 }
