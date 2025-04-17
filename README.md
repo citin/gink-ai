@@ -18,3 +18,8 @@ You can:
 - 🖼️ React 19
 - ♦️ Rails 8 - API
 - 🖌️ DaisyUI
+
+## Utilites
+
+- Zustand https://github.com/pmndrs/zustand
+- Tanstack - Queryhttps://tanstack.com/query/latest

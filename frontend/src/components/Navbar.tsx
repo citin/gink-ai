@@ -1,6 +1,4 @@
-import React from 'react';
-
-const Navbar: React.FC = () => {
+function Navbar() {
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-none lg:hidden">

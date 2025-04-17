@@ -1,20 +1,62 @@
-import { Thread as ThreadType } from '../types/thread';
 import Message from './Message';
+import { useState, useRef, useEffect } from 'react';
+import { useAskChat } from '../hooks/useAskChat';
+import { useCurrentChat } from '../hooks/useCurrentChat';
 
-interface ThreadProps {
-  currentThread: ThreadType | null;
-}
+function Thread() {
+  const { currentThread } = useCurrentChat();
+  const { mutate: sendMessage, isPending } = useAskChat();
+  const [message, setMessage] = useState('');
 
-function Thread({ currentThread }: ThreadProps) {
-  // Visual constants for empty thread state
-  const emptyThreadIcon = "fa-solid fa-comments text-4xl mb-4";
-  const emptyThreadTitle = "No thread selected";
-  const emptyThreadSubtitle = "Select a thread from the sidebar to view messages";
+  // Refs for DOM elements
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Input area constants
-  const addOptionsIcon = "fa-solid fa-plus";
-  const sendIcon = "fa-solid fa-paper-plane";
-  const inputPlaceholder = "Type your message here...";
+  // Scroll to bottom when messages change or on initial load
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
+  };
+
+  // Scroll to bottom when messages change or on initial load
+  useEffect(() => {
+    scrollToBottom();
+  }, [currentThread?.messages]);
+
+  // Focus input field when component mounts or thread changes
+  useEffect(() => {
+    console.log('currentThread use Effect', currentThread)
+    if (currentThread) {
+      inputRef.current?.focus();
+    }
+  }, [currentThread]);
+
+  // Handler for sending messages
+  const handleSendMessage = () => {
+    if (!currentThread || !message.trim()) return;
+
+    sendMessage(
+      {
+        threadId: currentThread.id,
+        content: message
+      },
+      {
+        onSuccess: () => {
+          requestAnimationFrame(() => {
+            inputRef.current?.focus();
+          });
+        }
+      }
+    );
+
+    setMessage(''); // Clear input after sending
+  };
+
+  // Handle key press for sending message with Enter
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -29,13 +71,15 @@ function Thread({ currentThread }: ThreadProps) {
                 {currentThread.messages.map((message) => (
                   <Message key={message.id} message={message} />
                 ))}
+                {/* Empty div for auto-scrolling */}
+                <div ref={messagesEndRef} />
               </div>
             </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-base-content opacity-50">
-              <i className={emptyThreadIcon}></i>
-              <p className="text-lg font-medium">{emptyThreadTitle}</p>
-              <p className="text-sm">{emptyThreadSubtitle}</p>
+              <i className="fa-solid fa-comments text-4xl mb-4"></i>
+              <p className="text-lg font-medium">No thread selected</p>
+              <p className="text-sm">Select a thread from the sidebar to view messages</p>
             </div>
           )}
         </div>
@@ -45,7 +89,7 @@ function Thread({ currentThread }: ThreadProps) {
       <div className="join w-full">
         <div className="dropdown dropdown-top">
           <label tabIndex={0} className="btn btn-circle join-item">
-            <i className={addOptionsIcon}></i>
+            <i className="fa-solid fa-plus"></i>
           </label>
           <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
             <li><a>Upload File</a></li>
@@ -54,14 +98,22 @@ function Thread({ currentThread }: ThreadProps) {
           </ul>
         </div>
         <input
+          ref={inputRef}
           type="text"
-          placeholder={inputPlaceholder}
+          placeholder="Type your message here..."
           className="input join-item flex-1 rounded-l-2xl ml-2"
-          disabled={!currentThread}
+          disabled={!currentThread || isPending}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyPress}
         />
-        <button className="btn btn-primary join-item">
-          <i className={sendIcon}></i>
-          Send
+        <button
+          className="btn btn-primary join-item"
+          disabled={!currentThread || !message.trim() || isPending}
+          onClick={handleSendMessage}
+        >
+          <i className="fa-solid fa-paper-plane"></i>
+          {isPending ? 'Sending...' : 'Send'}
         </button>
       </div>
     </div>

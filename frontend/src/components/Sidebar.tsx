@@ -1,31 +1,14 @@
-import { Thread as ThreadType } from '../types/thread';
+// Components
 import ThreadSidebarItem from './ThreadSidebarItem';
-import { UseMutateFunction } from '@tanstack/react-query';
-import { useRef, useEffect } from 'react';
 
-interface SidebarProps {
-  threads: ThreadType[];
-  currentThread: ThreadType | null;
-  setCurrentThread: (thread: ThreadType) => void;
-  toggleFavorite: UseMutateFunction<ThreadType, Error, { threadId: string; isFavourite: boolean }, unknown>;
-}
+import useChats from '../hooks/useChats';
 
-function Sidebar({ threads, currentThread, setCurrentThread, toggleFavorite }: SidebarProps) {
+function Sidebar() {
+  const { threads } = useChats()
+
   // Derive favorite and non-favorite threads
   const favoriteThreads = threads.filter(thread => thread.isFavourite);
   const nonFavoriteThreads = threads.filter(thread => !thread.isFavourite);
-
-  // Refs to track which threads have changed
-  const prevThreadsRef = useRef<ThreadType[]>([]);
-
-  // Keep track of which threads have changed
-  useEffect(() => {
-    prevThreadsRef.current = threads;
-  }, [threads]);
-
-  const handleToggleFavorite = (threadId: string, isFavourite: boolean) => {
-    toggleFavorite({ threadId, isFavourite });
-  };
 
   return (
     <div className="drawer-side">
@@ -44,12 +27,7 @@ function Sidebar({ threads, currentThread, setCurrentThread, toggleFavorite }: S
                 key={thread.id}
                 className="thread-item animate-fade-in transition-all duration-300"
               >
-                <ThreadSidebarItem
-                  thread={thread}
-                  currentThread={currentThread}
-                  setCurrentThread={setCurrentThread}
-                  onToggleFavorite={handleToggleFavorite}
-                />
+                <ThreadSidebarItem thread={thread} />
               </div>
             ))}
             {favoriteThreads.length === 0 && (
@@ -67,12 +45,7 @@ function Sidebar({ threads, currentThread, setCurrentThread, toggleFavorite }: S
                 key={thread.id}
                 className="thread-item animate-fade-in transition-all duration-300"
               >
-                <ThreadSidebarItem
-                  thread={thread}
-                  currentThread={currentThread}
-                  setCurrentThread={setCurrentThread}
-                  onToggleFavorite={handleToggleFavorite}
-                />
+                <ThreadSidebarItem thread={thread} />
               </div>
             ))}
           </ul>
