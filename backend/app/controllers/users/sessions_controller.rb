@@ -7,6 +7,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def respond_with(current_user, _opts = {})
     token = request.env['warden-jwt_auth.token']
+    headers['Authorization'] = token
 
     render json: {
       status: { code: 200, message: 'Logged in successfully.' },
@@ -16,10 +17,26 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def respond_to_on_destroy
-    if authenticated_user
-      render json: { status: 200, message: 'Logged out successfully.' }, status: :ok
+    if request.headers['Authorization'].present?
+      jwt_payload = JWT.decode(
+        request.headers['Authorization'].split.last,
+        nil, # sin clave
+        false # no verificar firma
+      ).first
+
+      current_user = User.find(jwt_payload['sub'])
+    end
+
+    if current_user
+      render json: {
+        status: 200,
+        message: 'Logged out successfully.'
+      }, status: :ok
     else
-      render json: { status: 401, message: "Couldn't find an active session." }, status: :unauthorized
+      render json: {
+        status: 401,
+        message: "Couldn't find an active session."
+      }, status: :unauthorized
     end
   end
 
@@ -33,7 +50,9 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def decode_jwt_token
-    token = request.headers['Authorization'].split(' ').last
+    auth_header = request.headers['Authorization'].to_s
+    token = auth_header[/Bearer (.+)/, 1]
+
     JWT.decode(token, Rails.application.credentials.devise_jwt_secret_key!).first
   end
 end

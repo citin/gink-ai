@@ -1,3 +1,5 @@
 class Message < ApplicationRecord
   acts_as_message
-end 
+
+  belongs_to :user, optional: true
+end

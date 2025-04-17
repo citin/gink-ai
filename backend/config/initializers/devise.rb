@@ -263,7 +263,7 @@ Devise.setup do |config|
   # should add them to the navigational formats lists.
   #
   # The "*/*" below is required to match Internet Explorer requests.
-  config.navigational_formats = [:json]
+  config.navigational_formats = []
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
@@ -321,6 +321,10 @@ Devise.setup do |config|
     jwt.revocation_requests = [
       ['DELETE', %r{^/logout$}]
     ]
-    jwt.expiration_time = 30.minutes.to_i
+    jwt.expiration_time = Rails.env.development? ? nil : 30.days.to_i
+  end
+
+  config.warden do |manager|
+    manager.scope_defaults :user, store: false
   end
 end
