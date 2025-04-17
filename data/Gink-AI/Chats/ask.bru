@@ -1,0 +1,23 @@
+meta {
+  name: ask
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{HOST}}/chats/:id/ask?content="how are you my little project?"
+  body: none
+  auth: bearer
+}
+
+params:query {
+  content: "how are you my little project?"
+}
+
+params:path {
+  id: 1
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
