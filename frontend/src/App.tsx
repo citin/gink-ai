@@ -5,6 +5,12 @@ import './animations.css'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import Thread from './components/Thread'
+// Auth
+import { login } from './services/auth'
+
+login().catch((error) => {
+  console.error('Login failed', error)
+})
 
 function App() {
   return (

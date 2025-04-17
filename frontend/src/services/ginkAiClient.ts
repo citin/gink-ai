@@ -1,17 +1,16 @@
 import { Thread } from '../types/thread'
 import { Message } from '../types/message'
+import { authToken, API_BASE_URL } from './auth'
 
-// Base API URL - can be replaced with actual API URL in the future
-const API_BASE_URL = 'http://localhost:3000'
-const AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzYzM2MGUyOS03MDQzLTQ4NmMtODZkYi1hZGY0NTRkMzIyYTAiLCJzdWIiOiIxIiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNzQ0NzYzODk4LCJleHAiOjE3NDczNTU4OTh9.WX01DES_rC2J6vGFogFAZF0ea5b0T5w1GYD1479_9hc"
-
-// Endpoints
+// .../chats
 
 export async function fetchThreads(): Promise<Thread[]> {
 	console.log('Fetching threads from API')
 	const response = await apiFetch<{ chats: Thread[] }>('/chats')
 	return response.chats
 }
+
+// .../chats/:id/ask
 
 export async function askThread(threadId: string, content: string): Promise<{ message: Message }> {
 	return apiFetch(`/chats/${threadId}/ask`, {
@@ -25,13 +24,19 @@ export async function apiFetch<T>(
 	path: string,
 	options: RequestInit = {}
 ): Promise<T> {
+	// Check if we have an auth token, if not we might need to login first
+	if (!authToken) {
+		// You may want to redirect to login or handle this case differently
+		throw new Error('Authentication required')
+	}
 
 	const response = await fetch(`${API_BASE_URL}${path}`,
 		{
 			...options,
 			headers: {
 				...defaultHeaders,
-				...options.headers
+				...options.headers,
+				'Authorization': `Bearer ${authToken}`
 			}
 		})
 
@@ -45,8 +50,7 @@ export async function apiFetch<T>(
 
 // Default headers for API requests
 const defaultHeaders = {
-	'Content-Type': 'application/json',
-	'Authorization': `Bearer ${AUTH_TOKEN}`
+	'Content-Type': 'application/json'
 }
 
 

@@ -17,42 +17,28 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def respond_to_on_destroy
-    if request.headers['Authorization'].present?
-      jwt_payload = JWT.decode(
-        request.headers['Authorization'].split.last,
-        nil, # sin clave
-        false # no verificar firma
-      ).first
-
-      current_user = User.find(jwt_payload['sub'])
-    end
-
-    if current_user
-      render json: {
-        status: 200,
-        message: 'Logged out successfully.'
-      }, status: :ok
+    if authenticated_user
+      render json: { status: 200, message: 'Logged out successfully.' }, status: :ok
     else
-      render json: {
-        status: 401,
-        message: "Couldn't find an active session."
-      }, status: :unauthorized
+      render json: { status: 401, message: "Couldn't find an active session." }, status: :unauthorized
     end
   end
 
   def authenticated_user
-    return nil if request.headers['Authorization'].blank?
+    return nil if auth_headers.blank?
 
-    jwt_payload = decode_jwt_token
-    User.find_by(id: jwt_payload&.dig('sub'))
+    User.find_by(id: decoded_jwt_token&.dig('sub'))
   rescue JWT::DecodeError
     nil
   end
 
-  def decode_jwt_token
-    auth_header = request.headers['Authorization'].to_s
-    token = auth_header[/Bearer (.+)/, 1]
+  def decoded_jwt_token
+    token = auth_headers[/Bearer (.+)/, 1]
 
     JWT.decode(token, Rails.application.credentials.devise_jwt_secret_key!).first
+  end
+
+  def auth_headers
+    @auth_headers ||= request.headers['Authorization'].to_s
   end
 end
