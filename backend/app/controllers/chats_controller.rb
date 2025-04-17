@@ -42,14 +42,15 @@ class ChatsController < ApplicationController
 
   # PATCH /chats/:id/toggle_favourite
   def toggle_favourite
-    participant = @chat.participants.find_by(user: current_user)
-
-    if participant
-      participant.update(is_favourite: !participant.is_favourite)
-      render_json(@chat, meta: { message: 'Favourite status toggled successfully' }, serializer: ChatSerializer)
+    if current_user.favorited?(@chat)
+      current_user.unfavorite(@chat)
+      message = 'Chat removed from favorites'
     else
-      render_error('You are not a participant in this chat', :forbidden)
+      current_user.favorite(@chat)
+      message = 'Chat added to favorites'
     end
+
+    render_json(@chat, meta: { message: message }, serializer: ChatSerializer)
   end
 
   private
@@ -60,6 +61,6 @@ class ChatsController < ApplicationController
   end
 
   def chat_params
-    params.require(:chat).permit(:title)
+    params.require(:chat).permit(:model_id)
   end
 end

@@ -3,8 +3,8 @@ class ChatSerializer < ActiveModel::Serializer
 
   has_many :messages
 
-  def is_favourite
-    [true, false].sample
+  def is_favourite # rubocop:disable Naming/PredicateName
+    scope&.favorited?(object) || false
   end
 
   def title

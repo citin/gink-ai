@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_15_121107) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_17_123926) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,6 +20,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_121107) do
     t.datetime "updated_at", null: false
     t.bigint "owner_id"
     t.index ["owner_id"], name: "index_chats_on_owner_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "chat_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_favorites_on_chat_id"
+    t.index ["user_id", "chat_id"], name: "index_favorites_on_user_id_and_chat_id", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -74,6 +84,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_121107) do
   end
 
   add_foreign_key "chats", "users", column: "owner_id"
+  add_foreign_key "favorites", "chats"
+  add_foreign_key "favorites", "users"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
   add_foreign_key "participants", "chats"
