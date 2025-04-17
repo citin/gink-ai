@@ -13,12 +13,12 @@ post {
 body:json {
   {
     "user": {
-      "email": "user3@example.com",
+      "email": "test@example.com",
       "password": "password123"
     }
   }
 }
 
 script:post-response {
-  bru.setEnvVar("API_TOKEN", res.body.token)
+  bru.setEnvVar("access_token", res.body.token)
 }

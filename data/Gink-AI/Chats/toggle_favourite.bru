@@ -1,0 +1,19 @@
+meta {
+  name: toggle_favourite
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{HOST}}/chats/:id/toggle_favourite
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 1
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
