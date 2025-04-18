@@ -1,6 +1,7 @@
 import { Thread } from '../types/thread'
 import { Message } from '../types/message'
 import { authToken, API_BASE_URL } from './auth'
+import camelcaseKeys from 'camelcase-keys'
 
 // .../chats
 
@@ -17,6 +18,14 @@ export async function askThread(threadId: string, content: string): Promise<{ me
 		method: 'POST',
 		body: JSON.stringify({ content })
 	}) as Promise<{ message: Message }>
+}
+
+// .../chats/:id/toggle_favorite
+
+export async function toggleFavorite(threadId: string): Promise<{ thread: Thread }> {
+	return apiFetch(`/chats/${threadId}/toggle_favorite`, {
+		method: 'PATCH'
+	}) as Promise<{ thread: Thread }>
 }
 
 // General API fetch function
@@ -45,7 +54,7 @@ export async function apiFetch<T>(
 		throw new Error(`API Error ${response.status}: ${errorBody}`)
 	}
 
-	return response.json()
+	return camelcaseKeys(await response.json(), { deep: true })
 }
 
 // Default headers for API requests

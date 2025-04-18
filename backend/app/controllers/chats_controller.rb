@@ -1,6 +1,6 @@
 class ChatsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_chat, only: %i[show toggle_favourite ask]
+  before_action :set_chat, only: %i[show toggle_favorite ask]
 
   # GET /chats
   def index
@@ -40,8 +40,8 @@ class ChatsController < ApplicationController
     render_error(e.message, :unprocessable_entity)
   end
 
-  # PATCH /chats/:id/toggle_favourite
-  def toggle_favourite
+  # PATCH /chats/:id/toggle_favorite
+  def toggle_favorite
     if current_user.favorited?(@chat)
       current_user.unfavorite(@chat)
       message = 'Chat removed from favorites'

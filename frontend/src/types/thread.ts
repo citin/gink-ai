@@ -6,5 +6,5 @@ export interface Thread {
 	createdAt: string;
 	updatedAt: string;
 	messages: Message[];
-	isFavourite: boolean;
+	isFavorite: boolean;
 } 

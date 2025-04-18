@@ -1,31 +1,30 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { Thread } from '../types/thread';
 import { useCurrentChat } from '../hooks/useCurrentChat';
+import useToggleFavorite from '../hooks/useToggleFavorite';
 
 function ThreadSidebarItem({ thread }: { thread: Thread }) {
-  const { threads, currentThread, setCurrentThreadId } = useCurrentChat();
-  const queryClient = useQueryClient()
+  console.log('thread', thread)
+  const { currentThread, setCurrentThreadId } = useCurrentChat();
+  const { mutate: toggleFavorite } = useToggleFavorite();
 
   const isActive = currentThread?.id === thread.id;
 
   const itemClass = isActive ? 'menu-active' : '';
-  const iconClass = `transition-all duration-300 ease-in-out hover:scale-125 
-		${thread.isFavourite ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star'}`;
+  const iconClass = `transition-all duration-300 ease-in-out hover:scale-125 cursor-pointer
+		${thread.isFavorite ? 'fa-solid fa-star text-yellow-400' : 'fa-regular fa-star'}`;
   const spanClass = `badge badge-sm ml-auto
-    ${thread.isFavourite ? 'badge-primary' : 'badge-secondary'}`;
+    ${thread.isFavorite ? 'badge-primary' : 'badge-secondary'}`;
 
   function handleToggleFavorite(e: React.MouseEvent) {
     e.stopPropagation();
-
-    const updatedThreads = threads.map(t =>
-      thread.id === t.id ? { ...t, isFavourite: !t.isFavourite } : t
-    )
-    queryClient.setQueryData(['threads'], updatedThreads)
+    toggleFavorite({ threadId: thread.id });
   }
 
   return (
     <li className="w-full">
-      <a className={itemClass} onClick={() => setCurrentThreadId(thread.id)}>
+      <button
+        className={itemClass}
+        onClick={() => setCurrentThreadId(thread.id)}>
         <i
           className={iconClass}
           onClick={handleToggleFavorite}
@@ -34,7 +33,7 @@ function ThreadSidebarItem({ thread }: { thread: Thread }) {
         <span className={spanClass}>
           {thread.messages.length}
         </span>
-      </a>
+      </button>
     </li>
   );
 }

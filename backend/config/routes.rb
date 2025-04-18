@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   # Chat routes
   resources :chats, only: %i[index show create] do
     member do
-      patch :toggle_favourite
+      patch :toggle_favorite
       post :ask
     end
   end

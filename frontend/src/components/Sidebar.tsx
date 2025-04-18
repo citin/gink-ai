@@ -7,8 +7,8 @@ function Sidebar() {
   const { threads } = useChats()
 
   // Derive favorite and non-favorite threads
-  const favoriteThreads = threads.filter(thread => thread.isFavourite);
-  const nonFavoriteThreads = threads.filter(thread => !thread.isFavourite);
+  const favoriteThreads = threads.filter(thread => thread.isFavorite);
+  const nonFavoriteThreads = threads.filter(thread => !thread.isFavorite);
 
   return (
     <div className="drawer-side">
