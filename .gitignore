@@ -59,6 +59,9 @@ backend/config/credentials/*.key
 *.sln
 *.sw?
 
+# Cursor ignore
+.cursorignore
+
 # Ignore environment files
 .env
 .env.*

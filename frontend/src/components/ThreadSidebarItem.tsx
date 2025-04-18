@@ -1,10 +1,11 @@
 import { Thread } from '../types/thread';
-import { useCurrentChat } from '../hooks/useCurrentChat';
+import useThreadStore from '../store/threadStore';
+import useCurrentChat from '../hooks/useCurrentChat';
 import useToggleFavorite from '../hooks/useToggleFavorite';
 
 function ThreadSidebarItem({ thread }: { thread: Thread }) {
-  console.log('thread', thread)
-  const { currentThread, setCurrentThreadId } = useCurrentChat();
+  const { setCurrentThreadId } = useThreadStore();
+  const currentThread = useCurrentChat();
   const { mutate: toggleFavorite } = useToggleFavorite();
 
   const isActive = currentThread?.id === thread.id;

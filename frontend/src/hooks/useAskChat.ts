@@ -1,17 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { v4 as uuidv4 } from 'uuid'
 import { askThread } from '../services/ginkAiClient'
-import { Message as ApiMessage } from '../types/message'
+import { v4 as uuidv4 } from 'uuid'
 import { Thread } from '../types/thread'
-import { useCurrentChat } from './useCurrentChat'
-
+import { Message as ApiMessage } from '../types/message'
+import useChats from './useChats'
+import useCurrentChat from './useCurrentChat'
 interface MessageInput {
 	threadId: string
 	content: string
 }
 
 export function useAskChat() {
-	const { currentThread, threads } = useCurrentChat()
+	const { threads } = useChats()
+	const currentThread = useCurrentChat()
 	const queryClient = useQueryClient()
 
 	return useMutation({

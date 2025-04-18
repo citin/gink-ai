@@ -1,10 +1,11 @@
 import Message from './Message';
 import { useState, useRef, useEffect } from 'react';
 import { useAskChat } from '../hooks/useAskChat';
-import { useCurrentChat } from '../hooks/useCurrentChat';
+import useCurrentChat from '../hooks/useCurrentChat';
+
 
 function Thread() {
-  const { currentThread } = useCurrentChat();
+  const currentThread = useCurrentChat();
   const { mutate: sendMessage, isPending } = useAskChat();
   const [message, setMessage] = useState('');
 
